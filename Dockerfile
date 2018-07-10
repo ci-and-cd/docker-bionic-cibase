@@ -3,7 +3,7 @@ FROM cirepo/nix:2.0.4_bionic
 
 
 COPY --from=cirepo/bionic-nvm-node:9.11.1-archive /data/root /
-COPY --from=cirepo/bionic-pyenv-python:2.7.x_3.6.x-archive /data/root /
+COPY --from=cirepo/bionic-pyenv-python:2.7.14_3.6.5-archive /data/root /
 COPY --from=cirepo/bionic-rvm-ruby:2.4.1-archive /data/root /
 COPY --from=cirepo/bionic-docker:18.5.0-archive /data/root /
 COPY --from=cirepo/bionic-rust:stable-archive /data/root /
