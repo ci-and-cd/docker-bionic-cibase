@@ -5,7 +5,7 @@ FROM cirepo/nix:2.0.4_bionic
 COPY --from=cirepo/bionic-nvm-node:9.11.1-archive /data/root /
 COPY --from=cirepo/bionic-pyenv-python:2.7.14_3.6.5-archive /data/root /
 COPY --from=cirepo/bionic-rvm-ruby:2.4.1-archive /data/root /
-COPY --from=cirepo/bionic-docker:18.5.0-archive /data/root /
+COPY --from=cirepo/bionic-docker:18.05.0-archive /data/root /
 COPY --from=cirepo/bionic-rust:stable-archive /data/root /
 COPY --from=cirepo/java-oracle:8u171-archive /data/root /
 COPY --from=cirepo/java-oracle:9.0.4-archive /data/root /
