@@ -14,7 +14,7 @@ COPY --from=cirepo/alpine-gradle:4.7-archive /data/root /
 COPY --from=cirepo/bionic-graphviz:latest-archive /data/root /
 
 
-ENV JAVA_HOME ${JDK8_HOME}
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 ENV M2_HOME /opt/maven
 ENV GRADLE_HOME /opt/gradle
 ENV NODE_HOME /opt/node
