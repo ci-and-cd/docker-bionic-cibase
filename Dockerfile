@@ -1,17 +1,17 @@
 
-FROM cirepo/nix:2.0.4_bionic
+FROM cirepo/nix:2.0.4-bionic
 
 
-COPY --chown=ubuntu:ubuntu --from=cirepo/bionic-nvm-node:9.11.1-archive /data/root /
-COPY --chown=ubuntu:ubuntu --from=cirepo/bionic-pyenv-python:2.7.14_3.6.5-archive /data/root /
-COPY --from=cirepo/bionic-rvm-ruby:2.4.1-archive /data/root /
-COPY --from=cirepo/bionic-docker:18.05.0-archive /data/root /
-COPY --chown=ubuntu:ubuntu --from=cirepo/bionic-rust:stable-archive /data/root /
-COPY --from=cirepo/java-oracle:8u171-archive /data/root /
-COPY --from=cirepo/java-oracle:9.0.4-archive /data/root /
-COPY --from=cirepo/alpine-maven:3.5.3-archive /data/root /
-COPY --from=cirepo/alpine-gradle:4.7-archive /data/root /
-COPY --from=cirepo/bionic-graphviz:latest-archive /data/root /
+COPY --chown=ubuntu:ubuntu --from=cirepo/nvm-node:9.11.1-bionic-archive /data/root /
+COPY --chown=ubuntu:ubuntu --from=cirepo/pyenv-python:2.7.14_3.6.5-bionic-archive /data/root /
+COPY --from=cirepo/rvm-ruby:2.4.1-bionic-archive /data/root /
+COPY --from=cirepo/docker:18.05.0-bionic-archive /data/root /
+COPY --chown=ubuntu:ubuntu --from=cirepo/rust:stable-bionic-archive /data/root /
+COPY --from=cirepo/java-oracle:8u171-alpine-3.7-archive /data/root /
+COPY --from=cirepo/java-oracle:9.0.4-alpine-3.7-archive /data/root /
+COPY --from=cirepo/maven:3.5.3-alpine-archive /data/root /
+COPY --from=cirepo/gradle:4.7-alpine-archive /data/root /
+COPY --from=cirepo/graphviz:latest-bionic-archive /data/root /
 
 
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
