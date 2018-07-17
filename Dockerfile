@@ -9,6 +9,7 @@ COPY --from=cirepo/docker:18.05.0-bionic-archive /data/root /
 COPY --chown=ubuntu:ubuntu --from=cirepo/rust:stable-bionic-archive /data/root /
 COPY --from=cirepo/java-oracle:8u171-alpine-3.7-archive /data/root /
 COPY --from=cirepo/java-oracle:9.0.4-alpine-3.7-archive /data/root /
+COPY --from=cirepo/java-oracle:10.0.1-alpine-3.7-archive /data/root /
 COPY --from=cirepo/maven:3.5.3-alpine-archive /data/root /
 COPY --from=cirepo/gradle:4.7-alpine-archive /data/root /
 COPY --from=cirepo/graphviz:latest-bionic-archive /data/root /
