@@ -55,3 +55,21 @@ if which pyenv > /dev/null; then eval "$(pyenv init -)"; eval "$(pyenv virtualen
 export PATH="$PATH:$HOME/.rvm/bin"\n\
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*\n\
 ' | tee -a /home/${USER:-ubuntu}/.profile
+
+RUN set -ex \
+  && echo 'make directories' \
+  && mkdir -p /home/${USER:-ubuntu}/.docker && chmod 775 /home/${USER:-ubuntu}/.docker \
+  && mkdir -p /home/${USER:-ubuntu}/.gnupg && chmod 700 /home/${USER:-ubuntu}/.gnupg \
+  && mkdir -p /home/${USER:-ubuntu}/.gradle && chmod 775 /home/${USER:-ubuntu}/.gradle \
+  && mkdir -p /home/${USER:-ubuntu}/.m2 && chmod 775 /home/${USER:-ubuntu}/.m2 \
+  && mkdir -p /home/${USER:-ubuntu}/.ssh && chmod 755 /home/${USER:-ubuntu}/.ssh \
+  && touch /home/${USER:-ubuntu}/.ssh/config \
+  && echo '\n\
+# ssh config\n\
+Host *\n\
+    StrictHostKeyChecking no\n\
+    UserKnownHostsFile /dev/null\n\
+\n' | tee -a /home/${USER:-ubuntu}/.ssh/config \
+  && chmod 644 /home/${USER:-ubuntu}/.ssh/config \
+  && echo 'setup user group' \
+  && sudo usermod -a -G docker ${USER:-ubuntu}
