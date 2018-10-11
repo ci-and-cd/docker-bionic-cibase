@@ -73,3 +73,13 @@ Host *\n\
   && chmod 644 /home/${USER:-ubuntu}/.ssh/config \
   && echo 'setup user group' \
   && sudo usermod -a -G docker ${USER:-ubuntu}
+
+RUN set -ex \
+  && echo ===== Install ansible ===== \
+  && sudo apt -y update \
+  && sudo apt -y install python-minimal \
+  && sudo apt-add-repository -y ppa:ansible/ansible \
+  && sudo apt -y update \
+  && sudo apt -y install ansible \
+  && sudo apt -q -y autoremove \
+  && sudo apt -q -y clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -f /var/cache/apt/*.bin \
