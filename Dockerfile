@@ -80,6 +80,6 @@ RUN set -ex \
   && sudo apt -y install python-minimal \
   && sudo apt-add-repository -y ppa:ansible/ansible \
   && sudo apt -y update \
-  && sudo apt -y install ansible \
+  && sudo apt -y install ansible rsync \
   && sudo apt -q -y autoremove \
   && sudo apt -q -y clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -f /var/cache/apt/*.bin \
