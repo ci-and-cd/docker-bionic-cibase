@@ -8,4 +8,4 @@ services:
       dockerfile: Dockerfile
       args:
       - IMAGE_ARG_APT_MIRROR=${IMAGE_ARG_APT_MIRROR:-mirrors.163.com}
-    image: ${IMAGE_PREFIX:-cirepo}/${IMAGE_NAME:-cibase}:${IMAGE_TAG:-latest-bionic}
+    image: ${IMAGE_PREFIX:-cirepo/}${IMAGE_NAME:-cibase}:${IMAGE_TAG:-latest-bionic}
