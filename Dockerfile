@@ -1,25 +1,69 @@
 
-FROM cirepo/nix:2.1.1-bionic
+FROM cirepo/nix:2.2.1-bionic
 
 
-COPY --chown=ubuntu:ubuntu --from=cirepo/nvm-node:9.11.1-bionic-archive /data/root /
-COPY --chown=ubuntu:ubuntu --from=cirepo/pyenv-python:2.7.15_3.6.6-bionic-archive /data/root /
-COPY --from=cirepo/rvm-ruby:2.4.1-bionic-archive /data/root /
-COPY --from=cirepo/docker:18.06.1-bionic-archive /data/root /
+COPY --chown=ubuntu:ubuntu --from=cirepo/nvm-node:10.15.3-bionic-archive /data/root /
+COPY --chown=ubuntu:ubuntu --from=cirepo/pyenv-python:2.7.16_3.7.2-bionic-archive /data/root /
+COPY --from=cirepo/rvm-ruby:2.6.1-bionic-archive /data/root /
+COPY --from=cirepo/docker:18.09.3-bionic-archive /data/root /
 COPY --chown=ubuntu:ubuntu --from=cirepo/rust:stable-bionic-archive /data/root /
-COPY --from=cirepo/java-oracle:8u181-alpine-3.8-archive /data/root /
-COPY --from=cirepo/java-oracle:9.0.4-alpine-3.8-archive /data/root /
-COPY --from=cirepo/java-oracle:10.0.2-alpine-3.8-archive /data/root /
-COPY --from=cirepo/maven:3.5.4-alpine-archive /data/root /
-COPY --from=cirepo/gradle:4.7-alpine-archive /data/root /
+COPY --from=cirepo/java-11-openjdk:11.0.2-alpine-3.9-archive /data/root /
+COPY --from=cirepo/maven:3.6.0-alpine-archive /data/root /
+COPY --from=cirepo/gradle:5.2.1-alpine-archive /data/root /
 COPY --from=cirepo/graphviz:latest-bionic-archive /data/root /
 
 
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk
 ENV M2_HOME /opt/maven
 ENV GRADLE_HOME /opt/gradle
 ENV NODE_HOME /opt/node
 ENV PATH ${JAVA_HOME}/bin:${NODE_HOME}/bin:${M2_HOME}/bin:${GRADLE_HOME}/bin:${PATH}
+
+
+RUN set -ex \
+  && sudo chown root:root /tmp \
+  && sudo chmod 777 /tmp
+
+
+# Install openjdk-8-jdk into /usr/lib/jvm/java-8-openjdk-amd64
+RUN set -ex \
+  && sudo apt -y update \
+  && sudo apt-cache madison openjdk-8-jdk \
+  && sudo apt -yq install openjdk-8-jdk \
+  && sudo ln -s /usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/java-8-oracle \
+  && sudo rm -rf /usr/lib/jvm/java-8-openjdk-amd64/*src.zip \
+       /usr/lib/jvm/java-8-openjdk-amd64/lib/missioncontrol \
+       /usr/lib/jvm/java-8-openjdk-amd64/lib/visualvm \
+       /usr/lib/jvm/java-8-openjdk-amd64/lib/*javafx* \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/plugin.jar \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext/jfxrt.jar \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/javaws \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/javaws.jar \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/desktop \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/plugin \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/deploy* \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/*javafx* \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/*jfx* \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/libdecora_sse.so \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/libprism_*.so \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/libfxplugins.so \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/libglass.so \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/libgstreamer-lite.so \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/libjavafx*.so \
+       /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/libjfx*.so \
+  && POLICY_DIR="UnlimitedJCEPolicyJDK8" \
+  && sudo mkdir -p /data \
+  && if [ ! -f /data/jce_policy-8.zip ]; then \
+       ${ARIA2C_DOWNLOAD} --header="Cookie: oraclelicense=accept-securebackup-cookie" \
+       -d /data -o jce_policy-8.zip ${IMAGE_ARG_FILESERVER:-http://download.oracle.com}/otn-pub/java/jce/8/jce_policy-8.zip; \
+     fi \
+  && unzip /data/jce_policy-8.zip \
+  && sudo cp -f ${POLICY_DIR}/US_export_policy.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/US_export_policy.jar \
+  && sudo cp -f ${POLICY_DIR}/local_policy.jar /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/local_policy.jar \
+  && rm -rf ${POLICY_DIR} \
+  && rm -f /data/jce_policy-8.zip \
+  && sudo apt -q -y autoremove \
+  && sudo apt -q -y clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -f /var/cache/apt/*.bin
 
 
 RUN set -ex \
@@ -30,7 +74,7 @@ RUN set -ex \
         if [ -d /home/${USER:-ubuntu}/.rvm ]; then sudo cp -r /home/${USER:-ubuntu}/.rvm /root/; sudo chown -R ${USER:-ubuntu}:${USER:-ubuntu} /home/${USER:-ubuntu}/.rvm; fi; \
      fi \
   && if [ "${USER:-ubuntu}" != "root" ]; then sudo gpasswd -a ${USER:-ubuntu} docker; fi \
-  && echo '\nexport JAVA_HOME=/usr/lib/jvm/java-8-oracle\n\
+  && echo '\nexport JAVA_HOME=/usr/lib/jvm/java-11-openjdk\n\
 export M2_HOME=/opt/maven\n\
 export NODE_HOME=/opt/node\n\
 export GRADLE_HOME=/opt/gradle\n\n\
