@@ -13,7 +13,7 @@ COPY --from=cirepo/gradle:5.2.1-alpine-archive /data/root /
 COPY --from=cirepo/graphviz:latest-bionic-archive /data/root /
 
 
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 ENV M2_HOME /opt/maven
 ENV GRADLE_HOME /opt/gradle
 ENV NODE_HOME /opt/node
@@ -27,9 +27,12 @@ RUN set -ex \
 
 # Install openjdk-8-jdk into /usr/lib/jvm/java-8-openjdk-amd64
 RUN set -ex \
+  && sudo ln -s /usr/lib/jvm/java-11-openjdk-amd64 /usr/lib/jvm/java-11-openjdk \
+  && sudo ln -s /usr/lib/jvm/java-11-openjdk-amd64 /usr/lib/jvm/java-11-oracle \
   && sudo apt -y update \
   && sudo apt-cache madison openjdk-8-jdk \
   && sudo apt -yq install openjdk-8-jdk \
+  && sudo ln -s /usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/java-8-openjdk \
   && sudo ln -s /usr/lib/jvm/java-8-openjdk-amd64 /usr/lib/jvm/java-8-oracle \
   && sudo rm -rf /usr/lib/jvm/java-8-openjdk-amd64/*src.zip \
        /usr/lib/jvm/java-8-openjdk-amd64/lib/missioncontrol \
