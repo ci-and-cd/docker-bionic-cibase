@@ -6,7 +6,7 @@ COPY --chown=ubuntu:ubuntu --from=cirepo/nvm-node:10.15.3-bionic-archive /data/r
 COPY --chown=ubuntu:ubuntu --from=cirepo/pyenv-python:2.7.16_3.7.2-bionic-archive /data/root /
 COPY --from=cirepo/rvm-ruby:2.6.1-bionic-archive /data/root /
 COPY --from=cirepo/docker:18.09.3-bionic-archive /data/root /
-COPY --chown=ubuntu:ubuntu --from=cirepo/rust:stable-bionic-archive /data/root /
+COPY --chown=ubuntu:ubuntu --from=cirepo/rust:1.33.0-bionic-archive /data/root /
 COPY --from=cirepo/java-11-openjdk:11.0.2-alpine-3.9-archive /data/root /
 COPY --from=cirepo/maven:3.6.0-alpine-archive /data/root /
 COPY --from=cirepo/gradle:5.2.1-alpine-archive /data/root /
@@ -83,25 +83,25 @@ export NODE_HOME=/opt/node\n\
 export GRADLE_HOME=/opt/gradle\n\n\
 export PATH=$JAVA_HOME/bin:$NODE_HOME/bin:$GRADLE_HOME/bin:$M2_HOME/bin:$PATH\n' | sudo tee -a /etc/profile \
   && echo "pyenv and rvm for user root" \
-  && sudo touch /root/.profile \
+  && sudo touch /root/.bashrc \
   && echo '\nexport PATH="${HOME}/.pyenv/bin:${PATH}"\n\
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; eval "$(pyenv virtualenv-init -)"; fi\n\
-' | sudo tee -a /root/.profile \
+' | sudo tee -a /root/.bashrc \
   && echo '\n\
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.\n\
 export PATH="$PATH:$HOME/.rvm/bin"\n\
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*\n\
-' | sudo tee -a /root/.profile \
+' | sudo tee -a /root/.bashrc \
   && echo "pyenv and rvm for user ${USER:-ubuntu}" \
-  && touch /home/${USER:-ubuntu}/.profile \
+  && touch /home/${USER:-ubuntu}/.bashrc \
   && echo '\nexport PATH="${HOME}/.pyenv/bin:${PATH}"\n\
 if which pyenv > /dev/null; then eval "$(pyenv init -)"; eval "$(pyenv virtualenv-init -)"; fi\n\
-' | tee -a /home/${USER:-ubuntu}/.profile \
+' | tee -a /home/${USER:-ubuntu}/.bashrc \
   && echo '\n\
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.\n\
 export PATH="$PATH:$HOME/.rvm/bin"\n\
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*\n\
-' | tee -a /home/${USER:-ubuntu}/.profile
+' | tee -a /home/${USER:-ubuntu}/.bashrc
 
 RUN set -ex \
   && echo 'make directories' \
