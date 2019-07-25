@@ -129,4 +129,9 @@ RUN set -ex \
   && sudo apt -y update \
   && sudo apt -y install ansible rsync \
   && sudo apt -q -y autoremove \
-  && sudo apt -q -y clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -f /var/cache/apt/*.bin \
+  && sudo apt -q -y clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -f /var/cache/apt/*.bin
+
+RUN set -ex \
+  && sudo apt -y update \
+  && sudo apt -q -y install ca-certificates openssl \
+  && sudo apt -q -y clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -f /var/cache/apt/*.bin
