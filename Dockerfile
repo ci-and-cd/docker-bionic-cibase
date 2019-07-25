@@ -133,5 +133,5 @@ RUN set -ex \
 
 RUN set -ex \
   && sudo apt -y update \
-  && sudo apt -q -y install ca-certificates openssl \
+  && sudo UCF_FORCE_CONFFNEW=1 apt -q -y install ca-certificates openssl \
   && sudo apt -q -y clean && sudo rm -rf /var/lib/apt/lists/* && sudo rm -f /var/cache/apt/*.bin
